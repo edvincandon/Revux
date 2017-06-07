@@ -2,7 +2,6 @@ import { extendVue } from './extend'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
-
 const RevueInstaller = {
   install(_Vue) {
     extendVue(_Vue)

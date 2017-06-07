@@ -4,7 +4,7 @@
   "description": "Redux bindings for Vue.js",
   "main": "src/index.js",
   "scripts": {
-    "build": "bili --format cjs --format umd --compress --module-name Revue2",
+    "build": "node_modules/rollup/bin/rollup src/index.js --format umd --name 'Revue2' --output dist/revue2.js --sourcemap",
     "build:cjs": "bili --format cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
