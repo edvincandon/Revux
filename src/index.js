@@ -1,24 +1,24 @@
 import Vue from 'vue'
-import dotProp from 'dot-prop'
-
-// to valid and match like `a as x.y.z`
-const re = /^([\w\.-]+)\s+as\s+([\w\.-]+)$/i
-
 const isDev = process.env.NODE_ENV !== 'production'
 
-function parseProp(prop) {
-	// realProp: property name/path in your instance
-	// storeProp: property name/path in Redux store
-	let realProp = prop
-	let storeProp = prop
-	if (re.test(prop)) {
-		[, storeProp, realProp] = prop.match(re)
-	}
-	return {storeProp, realProp}
-}
+function shallowEqual(objA, objB) {
+  if (objA === objB) return true;
 
-function deepProp(obj, path){
-	return path.split('.').reduce((o, p) => o[p], obj)
+  const keysA = Object.keys(objA);
+  const keysB = Object.keys(objB);
+
+  if (keysA.length !== keysB.length) return false;
+
+  // Test for A's keys different from B.
+  const hasOwn = Object.prototype.hasOwnProperty;
+  for (let i = 0; i < keysA.length; i++) {
+    if (!hasOwn.call(objB, keysA[i]) ||
+        objA[keysA[i]] !== objB[keysA[i]]) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
@@ -27,33 +27,33 @@ function deepProp(obj, path){
  * @param {Vue} Vue
  */
 function applyMixin(Vue) {
-	Vue.mixin({
-		created() {
-			if (this._bindProps) {
-				const handleChange = () => {
-					this._bindProps.forEach(prop => {
-						const {storeProp, realProp} = prop
-						if (realProp && storeProp) {
-							dotProp.set(this, realProp, deepProp(this.$store.state, storeProp))
-						}
-					})
-				}
-				this._unsubscribe = this.$store.subscribe(handleChange)
-			}
-		},
-		beforeDestroy() {
-			if (this._unsubscribe) {
-				this._unsubscribe()
-			}
+	Vue.prototype.$connect = function (mapState) {
+		const vm = this;
+		const getMappedState = (state = this.$store.state) => mapState(state);
+
+		const observeStore = (store, currState, select, onChange) => {
+			if (typeof onChange !== 'function') return null;
+  		let currentState = currState || {};
+
+			function handleChange() {
+		    const nextState = getMappedState();
+		    if (!shallowEqual(currentState, nextState)) {
+		      const previousState = currentState;
+		      currentState = nextState;
+		      onChange(currentState, previousState);
+		    }
+		  }
+
+			const unsubscribe = store.subscribe(handleChange);
+		  handleChange();
+		  return unsubscribe
 		}
-	})
-	Vue.prototype.$select = function (prop) {
-		// realProp: property name/path in your instance
-		// storeProp: property name/path in Redux store
-		this._bindProps = this._bindProps || []
-		prop = parseProp(prop)
-		this._bindProps.push(prop)
-		return deepProp(this.$store.state, prop.storeProp)
+
+		observeStore(this.$store, this.$store.state, getMappedState(), (newState, oldState) => {
+			Object.keys(newState).forEach(key => {
+				vm[key] = newState[key];
+			});
+		});
 	}
 
 	Object.defineProperty(Vue.prototype, '$store', {
@@ -82,7 +82,8 @@ export default class Revue {
 			throw new Error('You must provide a target el to Revue')
 		}
 
-    Vue.use(RevueInstaller) // Apply global mixin and extend prototype
+		// Apply global mixin and extend prototype
+    Vue.use(RevueInstaller)
 
 		this.store = reduxStore
 		this.subscribe = this.subscribe.bind(this);

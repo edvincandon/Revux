@@ -2,7 +2,7 @@
   "name": "revue2",
   "version": "0.0.1",
   "description": "Redux bindings for Vue.js",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
     "build": "bili --format cjs --format umd --compress --module-name Revue2",
     "build:cjs": "bili --format cjs",
