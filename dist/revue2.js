@@ -1,28 +1,44 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Revue2 = factory())
-}(this, (function () { 'use strict'
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('redux')) :
+	typeof define === 'function' && define.amd ? define(['redux'], factory) :
+	(global.Revue2 = factory(global.redux));
+}(this, (function (redux) { 'use strict';
+
+const hasOwn = Object.prototype.hasOwnProperty;
+
+function is(x, y) {
+  if (x === y) {
+    return x !== 0 || y !== 0 || 1 / x === 1 / y
+  } else {
+    return x !== x && y !== y
+  }
+}
 
 function shallowEqual(objA, objB) {
-  if (objA === objB) return true
+  if (is(objA, objB)) return true
 
-  const keysA = Object.keys(objA)
-  const keysB = Object.keys(objB)
+  if (typeof objA !== 'object' || objA === null ||
+    typeof objB !== 'object' || objB === null) {
+    return false
+  }
+
+  const keysA = Object.keys(objA);
+  const keysB = Object.keys(objB);
 
   if (keysA.length !== keysB.length) return false
 
-  // Test for A's keys different from B.
-  const hasOwn = Object.prototype.hasOwnProperty
-  for (let i = 0 i < keysA.length i++) {
+  for (let i = 0; i < keysA.length; i++) {
     if (!hasOwn.call(objB, keysA[i]) ||
-      objA[keysA[i]] !== objB[keysA[i]]) {
+      !is(objA[keysA[i]], objB[keysA[i]])) {
       return false
     }
   }
 
   return true
 }
+
+const wrapActionCreators = (actionCreators) =>
+  dispatch => redux.bindActionCreators(actionCreators, dispatch);
 
 /**
  * Extend Vue prototype + global mixin
@@ -31,74 +47,70 @@ function shallowEqual(objA, objB) {
  */
 
 function extendVue(Vue) {
-  Vue.prototype.$connect = function(mapState) {
-    const vm = this
-    const getMappedState = (state = this.$store.state) => mapState(state)
+  Vue.mixin({
+    beforeDestroy() {
+      if (this._unsubscribe) {
+        this._unsubscribe();
+      }
+    }
+  });
+  Vue.prototype.$connect = function(mapState, mapDispatch) {
+    const vm = this;
+    const getMappedState = (state = this.$store.state) => mapState(state);
+
+    const actions = wrapActionCreators(mapDispatch)(this.$store.dispatch);
+    Object.keys(actions).forEach(key => {
+      vm[key] = actions[key];
+    });
 
     const observeStore = (store, currState, select, onChange) => {
       if (typeof onChange !== 'function') return null
-      let currentState = currState || {}
+      let currentState = currState || {};
 
       function handleChange() {
-        const nextState = getMappedState()
+        const nextState = select(store.state);
         if (!shallowEqual(currentState, nextState)) {
-          const previousState = currentState
-          currentState = nextState
-          onChange(currentState, previousState)
+          const previousState = currentState;
+          currentState = nextState;
+          onChange(currentState, previousState);
         }
       }
 
-      const unsubscribe = store.subscribe(handleChange)
-      handleChange()
-      return unsubscribe
-    }
+      handleChange();
+      return store.subscribe(handleChange)
+    };
 
-    observeStore(this.$store, this.$store.state, getMappedState(), (newState, oldState) => {
+    this._unsubscribe = observeStore(this.$store, getMappedState(), getMappedState, (newState, oldState) => {
       Object.keys(newState).forEach(key => {
-        vm[key] = newState[key]
-      })
-    })
-  }
+        if(vm[key] === undefined) {
+          console.warn(`[revue2] - you forgot to declare property **${key}** in your component's data function making it unreactive`);
+        }
+
+        vm.$set(vm, key, newState[key]);
+      });
+    });
+  };
 
   Object.defineProperty(Vue.prototype, '$store', {
     get: function $store() {
       if (!this.$root.store) {
-        throw new Error('No store provided to root component')
+        throw new Error('[revue2] - No store provided to root component')
       }
       return this.$root.store
     }
-  })
-}
-
-const isDev = process.env.NODE_ENV !== 'production'
-
-const RevueInstaller = {
-  install(_Vue) {
-    extendVue(_Vue)
-  }
+  });
 }
 
 class Revue {
-  constructor(reduxStore, reduxActions, options) {
+  constructor(reduxStore, options) {
     if (!options.component) {
-      throw new Error('You must provide an entry point component to Revue')
+      throw new Error('[revue2] - You must provide an entry point component')
     }
 
-		if (typeof window !== 'undefined' && window.Vue) {
-			const Vue = window.Vue
-			Vue.use(RevueInstaller)
-		} else {
-			throw new Error('Please load Vue before instanciating Revue')
-		}
-    // Apply global mixin and extend prototype
+    this.store = reduxStore;
+    this.subscribe = this.subscribe.bind(this);
 
-    this.store = reduxStore
-    this.subscribe = this.subscribe.bind(this)
-    if (reduxActions) {
-      this.reduxActions = reduxActions
-    }
-
-    const revueInstance = this
+    const revueInstance = this;
 
     this.Provider = {
       render: h => h(options.component),
@@ -107,26 +119,26 @@ class Revue {
           store: revueInstance
         }, options.data)
       }
-    }
+    };
   }
   subscribe(cb) {
-    this.store.subscribe(cb)
+    this.store.subscribe(cb);
   }
+	get dispatch() {
+		return this.store.dispatch
+	}
   get state() {
     return this.store.getState()
   }
-  get actions() {
-    if (isDev && !this.reduxActions) {
-      throw new Error('[Revue] Binding actions to Revue before calling them!')
-    }
-    return this.reduxActions
-  }
-  dispatch(...args) {
-    return this.store.dispatch(...args)
-  }
 }
 
-return Revue
+Revue.install = (_Vue) =>	{ extendVue(_Vue); };
 
-})))
+if (typeof window !== 'undefined' && window.Vue) {
+	window.Vue.use(RevueInstaller);
+}
+
+return Revue;
+
+})));
 //# sourceMappingURL=revue2.js.map
