@@ -36,15 +36,14 @@
     "jsdom": "^7.1.0",
     "mocha": "^2.3.4",
     "redux": "^3.6.0",
+    "rollup": "^0.42.0",
     "should": "^7.1.1",
     "style-loader": "^0.13.0",
     "vbuild": "^4.3.4",
+    "vue": "^2.1.6",
     "vue-loader": "^10.0.2",
     "vue-router": "^2.1.1",
     "vue-template-compiler": "^2.1.6"
   },
-  "dependencies": {
-    "vue": "^2.1.6",
-    "dot-prop": "^4.1.0"
-  }
+  "dependencies": {}
 }
