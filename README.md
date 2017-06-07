@@ -34,7 +34,7 @@ Vue.use(Revue);
 
 const { Provider } = new Revue(store, actions, {
   component: main,
-  data: { 
+  data: {
     // available on $root component
   }
 });
@@ -43,7 +43,10 @@ const app = new Vue(Provider).$mount('#target');
 ```
 
 **component.vue**
-Use the $connect method to map state to $data
+Use the `$connect` method to map state to $data
+Here our state looks something like `{ status: 'foobar' }`
+**Be sure to declare your mapped $data properties in your component's data definition for them to be reactive**
+
 ```js
 <template>{{status}}</template>
 

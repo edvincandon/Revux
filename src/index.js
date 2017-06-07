@@ -9,12 +9,12 @@ export default class Revue {
     }
 
     this.store = reduxStore
-    this.subscribe = this.subscribe.bind(this);
+    this.subscribe = this.subscribe.bind(this)
     if (reduxActions) {
       this.reduxActions = reduxActions
     }
 
-    const revueInstance = this;
+    const revueInstance = this
 
     this.Provider = {
       render: h => h(options.component),
@@ -23,7 +23,7 @@ export default class Revue {
           store: revueInstance
         }, options.data)
       }
-    };
+    }
   }
   subscribe(cb) {
     this.store.subscribe(cb)
@@ -42,9 +42,8 @@ export default class Revue {
   }
 }
 
-Revue.install = (_Vue) =>	{ extendVue(_Vue) };
+Revue.install = (_Vue) =>	{ extendVue(_Vue) }
 
 if (typeof window !== 'undefined' && window.Vue) {
 	window.Vue.use(RevueInstaller)
 }
-// Apply global mixin and extend prototype
