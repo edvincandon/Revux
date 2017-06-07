@@ -9,6 +9,13 @@ import {
  */
 
 export function extendVue(Vue) {
+  Vue.mixin({
+    beforeDestroy() {
+      if (this._unsubscribe) {
+        this._unsubscribe()
+      }
+    }
+  })
   Vue.prototype.$connect = function(mapState) {
     const vm = this
     const getMappedState = (state = this.$store.state) => mapState(state)
@@ -26,12 +33,11 @@ export function extendVue(Vue) {
         }
       }
 
-      const unsubscribe = store.subscribe(handleChange)
       handleChange()
-      return unsubscribe
+      return store.subscribe(handleChange)
     }
 
-    observeStore(this.$store, getMappedState(), getMappedState, (newState, oldState) => {
+    this._unsubscribe = observeStore(this.$store, getMappedState(), getMappedState, (newState, oldState) => {
       Object.keys(newState).forEach(key => {
         if(vm[key] === undefined) {
           console.warn(`[revue2] - you forgot to declare property **${key}** in your component's data function making it unreactive`)
