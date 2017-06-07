@@ -17,7 +17,10 @@ export function extendVue(Vue) {
       }
     }
   })
-  Vue.prototype.$connect = function(mapState, mapDispatch) {
+  const defaultMapState = () => ({});
+  const defaultMapDispatch =  dispatch => ({ dispatch });
+
+  Vue.prototype.$connect = function(mapState = defaultMapState, mapDispatch = defaultMapDispatch) {
     const vm = this
     const getMappedState = (state = this.$store.state) => mapState(state)
 
