@@ -30,12 +30,13 @@ import store from './store'
 import * as actions from './actions'
 import main from './component.vue'
 
-window.Vue = Vue;
-// make sure Vue is in global scope
+Vue.use(Revue);
 
 const { Provider } = new Revue(store, actions, {
   component: main,
-  data: { api: player }
+  data: { 
+    // available on $root component
+  }
 });
 
 const app = new Vue(Provider).$mount('#target');

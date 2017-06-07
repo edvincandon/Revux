@@ -2,25 +2,11 @@ import { extendVue } from './extend'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
-const RevueInstaller = {
-  install(_Vue) {
-    extendVue(_Vue)
-  }
-}
-
 export default class Revue {
   constructor(reduxStore, reduxActions, options) {
     if (!options.component) {
       throw new Error('You must provide an entry point component to Revue')
     }
-
-		if (typeof window !== 'undefined' && window.Vue) {
-			const Vue = window.Vue;
-			Vue.use(RevueInstaller)
-		} else {
-			throw new Error('Please load Vue before instanciating Revue');
-		}
-    // Apply global mixin and extend prototype
 
     this.store = reduxStore
     this.subscribe = this.subscribe.bind(this);
@@ -55,3 +41,10 @@ export default class Revue {
     return this.store.dispatch(...args)
   }
 }
+
+Revue.install = (_Vue) =>	{ extendVue(_Vue) };
+
+if (typeof window !== 'undefined' && window.Vue) {
+	window.Vue.use(RevueInstaller)
+}
+// Apply global mixin and extend prototype
