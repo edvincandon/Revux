@@ -1,5 +1,6 @@
 import {
-  shallowEqual
+  shallowEqual,
+  wrapActionCreators
 } from './utils'
 
 /**
@@ -16,9 +17,14 @@ export function extendVue(Vue) {
       }
     }
   })
-  Vue.prototype.$connect = function(mapState) {
+  Vue.prototype.$connect = function(mapState, mapDispatch) {
     const vm = this
     const getMappedState = (state = this.$store.state) => mapState(state)
+
+    const actions = wrapActionCreators(mapDispatch)(this.$store.dispatch)
+    Object.keys(actions).forEach(key => {
+      vm[key] = actions[key]
+    })
 
     const observeStore = (store, currState, select, onChange) => {
       if (typeof onChange !== 'function') return null
@@ -42,7 +48,8 @@ export function extendVue(Vue) {
         if(vm[key] === undefined) {
           console.warn(`[revue2] - you forgot to declare property **${key}** in your component's data function making it unreactive`)
         }
-        vm[key] = newState[key]
+
+        vm.$set(vm, key, newState[key])
       })
     })
   }

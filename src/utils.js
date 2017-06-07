@@ -1,3 +1,4 @@
+import { bindActionCreators } from 'redux'
 const hasOwn = Object.prototype.hasOwnProperty
 
 function is(x, y) {
@@ -30,3 +31,6 @@ export function shallowEqual(objA, objB) {
 
   return true
 }
+
+export const wrapActionCreators = (actionCreators) =>
+  dispatch => bindActionCreators(actionCreators, dispatch)

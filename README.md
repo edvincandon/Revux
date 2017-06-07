@@ -29,12 +29,11 @@ Instantiate Revue2 as your root component
 import Vue from 'vue'
 import Revue from 'revue2'
 import store from './store'
-import * as actions from './actions'
 import main from './component.vue'
 
 Vue.use(Revue)
 
-const { Provider } = new Revue(store, actions, {
+const { Provider } = new Revue(store, {
   component: main,
   data: {
     // available on $root component
@@ -46,7 +45,7 @@ const app = new Vue(Provider).$mount('#target')
 
 **component.vue**
 
-Use the `$connect` method to map state to $data
+Use the `$connect` method to map state to $data and map actions to dispatch.
 Here our state looks something like `{ status: 'foobar' }`
 
 **Be sure to declare your mapped $data properties in your component's data definition for them to be reactive**
@@ -55,6 +54,17 @@ Here our state looks something like `{ status: 'foobar' }`
 <template>{{status}}</template>
 
 <script>
+  import * as actions from './actions'
+
+  const mapState = state => {
+    const { status } = state // deeply nested state support as well
+    return {
+      status // must match data property
+    }
+  })
+
+  const mapDispatch = actions
+
   export default {
     name: 'playButton',
     data () {
@@ -63,12 +73,7 @@ Here our state looks something like `{ status: 'foobar' }`
       }
     },
     created () {
-      this.$connect(state => {
-        const { status } = state // deeply nested state support as well
-        return {
-          status // must match data property
-        }
-      })
+      this.$connect(mapState, mapDispatch)
     }
   }
 </script>

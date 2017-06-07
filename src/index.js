@@ -3,16 +3,13 @@ import { extendVue } from './extend'
 const isDev = process.env.NODE_ENV !== 'production'
 
 export default class Revue {
-  constructor(reduxStore, reduxActions, options) {
+  constructor(reduxStore, options) {
     if (!options.component) {
       throw new Error('[revue2] - You must provide an entry point component')
     }
 
     this.store = reduxStore
     this.subscribe = this.subscribe.bind(this)
-    if (reduxActions) {
-      this.reduxActions = reduxActions
-    }
 
     const revueInstance = this
 
@@ -28,17 +25,11 @@ export default class Revue {
   subscribe(cb) {
     this.store.subscribe(cb)
   }
+	get dispatch() {
+		return this.store.dispatch
+	}
   get state() {
     return this.store.getState()
-  }
-  get actions() {
-    if (isDev && !this.reduxActions) {
-      throw new Error('[revue2] - Binding actions to Revue before calling them!')
-    }
-    return this.reduxActions
-  }
-  dispatch(...args) {
-    return this.store.dispatch(...args)
   }
 }
 
