@@ -1,8 +1,7 @@
 
 # Revue2
 Based on Revue, use Redux with Vue.js seamlessly
-> We were not satisfied with the way the original Revue worked internally
-> Learn [Redux](http://redux.js.org/) before using Revue. That would help you get rid of JavaScript fatigue, sort of.
+> We were not satisfied with the way the original Revue worked internally.
 
 # Installation
 Install via NPM: `npm i --save revue2`
@@ -24,26 +23,28 @@ export default store
 
 **index.js**
 
-Instantiate Revue2 as your root component
+Instantiate Revue2 in your root's component data function as **store**
 ```js
 import Vue from 'vue'
 import Revue from 'revue2'
 import store from './store'
-import main from './component.vue'
+import main from './main.vue'
 
-Vue.use(Revue)
+Vue.use(Revue) // !!!
 
-const { Provider } = new Revue(store, {
-  component: main,
-  data: {
-    // available on $root component
+
+const app = new Vue({
+  el: '#app',
+  render: h => h(main),
+  data: function () {
+    return {
+      store: new Revue(store)
+    }
   }
 })
-
-const app = new Vue(Provider).$mount('#target')
 ```
 
-**component.vue**
+**main.vue**
 
 Use the `$connect` method to map state to $data and map actions to dispatch.
 Here our state looks something like `{ status: 'foobar' }`

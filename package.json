@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "node_modules/rollup/bin/rollup src/index.js --format umd --name 'Revue2' --output dist/revue2.js --sourcemap",
-    "build:cjs": "bili --format cjs",
+    "build:example": "vbuild",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
