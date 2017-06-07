@@ -10,7 +10,7 @@ Install via NPM: `npm i --save revue2`
 # Getting started
 > Work in Progress
 
-**store.js** 
+**store.js**
 
 Create your redux store:
 ```js
@@ -32,16 +32,16 @@ import store from './store'
 import * as actions from './actions'
 import main from './component.vue'
 
-Vue.use(Revue);
+Vue.use(Revue)
 
 const { Provider } = new Revue(store, actions, {
   component: main,
   data: {
     // available on $root component
   }
-});
+})
 
-const app = new Vue(Provider).$mount('#target');
+const app = new Vue(Provider).$mount('#target')
 ```
 
 **component.vue**
@@ -60,15 +60,15 @@ Here our state looks something like `{ status: 'foobar' }`
     data () {
       return {
         status: null // define it to be reactive
-      };
+      }
     },
     created () {
       this.$connect(state => {
-        const { status } = state;
+        const { status } = state // deeply nested state support as well
         return {
-          status
+          status // must match data property
         }
-      });
+      })
     }
   }
 </script>

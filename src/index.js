@@ -5,7 +5,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 export default class Revue {
   constructor(reduxStore, reduxActions, options) {
     if (!options.component) {
-      throw new Error('You must provide an entry point component to Revue')
+      throw new Error('[revue2] - You must provide an entry point component')
     }
 
     this.store = reduxStore
@@ -33,7 +33,7 @@ export default class Revue {
   }
   get actions() {
     if (isDev && !this.reduxActions) {
-      throw new Error('[Revue] Binding actions to Revue before calling them!')
+      throw new Error('[revue2] - Binding actions to Revue before calling them!')
     }
     return this.reduxActions
   }
