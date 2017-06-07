@@ -10,7 +10,8 @@ Install via NPM: `npm i --save revue2`
 # Getting started
 > Work in Progress
 
-**store.js**
+**store.js** 
+
 Create your redux store:
 ```js
 import {createStore} from 'redux'
@@ -22,6 +23,7 @@ export default store
 ```
 
 **index.js**
+
 Instantiate Revue2 as your root component
 ```js
 import Vue from 'vue'
@@ -43,8 +45,10 @@ const app = new Vue(Provider).$mount('#target');
 ```
 
 **component.vue**
+
 Use the `$connect` method to map state to $data
 Here our state looks something like `{ status: 'foobar' }`
+
 **Be sure to declare your mapped $data properties in your component's data definition for them to be reactive**
 
 ```js
