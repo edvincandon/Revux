@@ -61,4 +61,4 @@ typings/
 .DS_Store
 
 # builds
-dist-example/
+dist-example

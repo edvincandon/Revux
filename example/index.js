@@ -3,7 +3,8 @@ import Revue from '../src/index'
 import VueRouter from 'vue-router'
 import store from './store'
 import Home from './component/home.vue'
-import App from './app.vue';
+import App from './app.vue'
+import Test from './component/Test'
 
 Vue.use(Revue)
 Vue.use(VueRouter)
@@ -14,7 +15,8 @@ if (__DEV__) {
 
 const router = new VueRouter({
 	routes: [
-		{path: '/', component: Home}
+		{path: '/', component: Home},
+    {path: '/test', component: Test}
 	]
 })
 
