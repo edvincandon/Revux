@@ -11,6 +11,8 @@ Install via NPM: `npm i --save revue2`
 # Getting started
 > For **Vue-Router integration**: check out the example folder
 
+> More details coming soon
+
 **store.js**
 
 Create your redux store:
@@ -41,13 +43,13 @@ const app = new Vue({
 ```
 
 **main.vue**
+
 Use the Provider component from Revue2 and bind your redux store. The store will be provided to all children components.
 
 ```js
 <template>
     <Provider :store="store">
-      <write></write>
-      <read></read>
+      <connectedComponent></connectedComponent>
     </Provider>
 </template>
 
@@ -69,6 +71,7 @@ Use the Provider component from Revue2 and bind your redux store. The store will
 ```
 
 **connectedComponent.vue**
+
 Use the `$connect` method to map state to $data and map actions to dispatch.
 Here our state looks something like `{ status: 'foobar' }`
 
