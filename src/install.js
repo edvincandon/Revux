@@ -1,7 +1,7 @@
 import {
   shallowEqual,
   wrapActionCreators
-} from './utils'
+} from './utils/index'
 import Provider from './components/Provider'
 /**
  * Extend Vue prototype + global mixin
