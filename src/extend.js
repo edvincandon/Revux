@@ -18,7 +18,9 @@ export function extendVue(Vue) {
     }
   })
   const defaultMapState = () => ({});
-  const defaultMapDispatch =  dispatch => ({ dispatch });
+  const defaultMapDispatch = dispatch => ({
+    dispatch
+  });
 
   Vue.prototype.$connect = function(mapState = defaultMapState, mapDispatch = defaultMapDispatch) {
     const vm = this
@@ -48,7 +50,7 @@ export function extendVue(Vue) {
 
     this._unsubscribe = observeStore(this.$store, getMappedState(), getMappedState, (newState, oldState) => {
       Object.keys(newState).forEach(key => {
-        if(vm[key] === undefined) {
+        if (vm[key] === undefined) {
           console.warn(`[revue2] - you forgot to declare property **${key}** in your component's data function making it unreactive`)
         }
 

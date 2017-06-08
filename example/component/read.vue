@@ -8,13 +8,6 @@
 </template>
 
 <script>
-    const mapState = state => {
-      const { todos } = state
-      return {
-        todos
-      }
-    }
-    
     export default {
     data () {
       return {
@@ -22,9 +15,14 @@
       }
     },
     created () {
+      const mapState = state => {
+        const { todos } = state
+        return {
+          todos
+        }
+      }
       this.$connect(mapState)
     }
   }
-
 
 </script>

@@ -1,4 +1,6 @@
-import { bindActionCreators } from 'redux'
+import {
+  bindActionCreators
+} from 'redux'
 const hasOwn = Object.prototype.hasOwnProperty
 
 function is(x, y) {
