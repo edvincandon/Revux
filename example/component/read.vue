@@ -8,20 +8,23 @@
 </template>
 
 <script>
-  import store from '../store'
-  export default {
+    const mapState = state => {
+      const { todos } = state
+      return {
+        todos
+      }
+    }
+    
+    export default {
     data () {
       return {
         todos: null
       }
     },
     created () {
-      this.$connect(state => {
-        const { todos } = state
-        return {
-          todos
-        }
-      })
+      this.$connect(mapState)
     }
   }
+
+
 </script>

@@ -21,5 +21,5 @@ export default class Revue {
 Revue.install = (_Vue) =>	{ extendVue(_Vue) }
 
 if (typeof window !== 'undefined' && window.Vue) {
-	window.Vue.use(RevueInstaller)
+	window.Vue.use(Revue)
 }
