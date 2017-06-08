@@ -9,7 +9,7 @@ Based on Revue, use Redux with Vue.js seamlessly
 Install via NPM: `npm i --save revue2`
 
 # Getting started
-> Work in Progress
+> For **Vue-Router integration**: check out the example folder
 
 **store.js**
 
@@ -66,7 +66,7 @@ Here our state looks something like `{ status: 'foobar' }`
     }
   })
 
-  const mapDispatch = actions
+  const mapDispatch = actions // will add actions to
 
   export default {
     name: 'playButton',

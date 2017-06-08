@@ -42,7 +42,7 @@ export function extendVue(Vue) {
         }
       }
 
-      handleChange()
+      onChange(currentState, null) // trigger onChange on component created
       return store.subscribe(handleChange)
     }
 

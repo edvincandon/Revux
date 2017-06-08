@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "node_modules/rollup/bin/rollup src/index.js --format umd --name 'Revue2' --output dist/revue2.js --sourcemap",
-    "build:example": "vbuild",
+    "build:example": "vbuild --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,6 +36,7 @@
     "jsdom": "^7.1.0",
     "mocha": "^2.3.4",
     "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
     "rollup": "^0.42.0",
     "should": "^7.1.1",
     "style-loader": "^0.13.0",
