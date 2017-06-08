@@ -27,10 +27,8 @@ export default store
 
 **index.js**
 
-Instantiate Revue2 in your root's component data function as **store**
 ```js
 import Vue from 'vue'
-import Revue from 'revue2'
 import store from './store'
 import main from './main.vue'
 
