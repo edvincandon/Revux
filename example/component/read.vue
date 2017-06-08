@@ -8,21 +8,21 @@
 </template>
 
 <script>
-    export default {
+  const mapState = state => {
+    const { todos } = state
+    return {
+      todos
+    }
+  }
+
+  export default {
     data () {
       return {
         todos: null
       }
     },
     created () {
-      const mapState = state => {
-        const { todos } = state
-        return {
-          todos
-        }
-      }
       this.$connect(mapState)
     }
   }
-
 </script>

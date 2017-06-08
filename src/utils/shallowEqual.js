@@ -1,6 +1,3 @@
-import {
-  bindActionCreators
-} from 'redux'
 const hasOwn = Object.prototype.hasOwnProperty
 
 function is(x, y) {
@@ -11,7 +8,7 @@ function is(x, y) {
   }
 }
 
-export function shallowEqual(objA, objB) {
+export default function shallowEqual(objA, objB) {
   if (is(objA, objB)) return true
 
   if (typeof objA !== 'object' || objA === null ||
@@ -33,6 +30,3 @@ export function shallowEqual(objA, objB) {
 
   return true
 }
-
-export const wrapActionCreators = (actionCreators) =>
-  dispatch => bindActionCreators(actionCreators, dispatch)

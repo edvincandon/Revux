@@ -16,10 +16,5 @@ const router = new VueRouter({
 
 const app = new Vue({
   router,
-  render: h => h(App),
-  data: function () {
-    return {
-      store: new Revue(store, {})
-    }
-  }
+  render: h => h(App)
 }).$mount('#app');

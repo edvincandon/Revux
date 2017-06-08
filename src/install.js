@@ -2,14 +2,14 @@ import {
   shallowEqual,
   wrapActionCreators
 } from './utils'
-
+import Provider from './components/Provider'
 /**
  * Extend Vue prototype + global mixin
  *
  * @param {Vue} Vue
  */
 
-export function extendVue(Vue) {
+export default function install(Vue) {
   Vue.mixin({
     beforeDestroy() {
       if (this._unsubscribe) {
@@ -24,9 +24,10 @@ export function extendVue(Vue) {
 
   Vue.prototype.$connect = function(mapState = defaultMapState, mapDispatch = defaultMapDispatch) {
     const vm = this
-    const getMappedState = (state = this.$store.state) => mapState(state)
+    const __store__ = this.$store
+    const getMappedState = (state = __store__.getState()) => mapState(state)
 
-    const actions = wrapActionCreators(mapDispatch)(this.$store.dispatch)
+    const actions = wrapActionCreators(mapDispatch)(__store__.dispatch)
     Object.keys(actions).forEach(key => {
       vm[key] = actions[key]
     })
@@ -36,7 +37,7 @@ export function extendVue(Vue) {
       let currentState = currState || {}
 
       function handleChange() {
-        const nextState = select(store.state)
+        const nextState = select(store.getState())
         if (!shallowEqual(currentState, nextState)) {
           const previousState = currentState
           currentState = nextState
@@ -48,7 +49,7 @@ export function extendVue(Vue) {
       return store.subscribe(handleChange)
     }
 
-    this._unsubscribe = observeStore(this.$store, getMappedState(), getMappedState, (newState, oldState) => {
+    this._unsubscribe = observeStore(__store__, getMappedState(), getMappedState, (newState, oldState) => {
       Object.keys(newState).forEach(key => {
         if (vm[key] === undefined) {
           console.warn(`[revue2] - you forgot to declare property **${key}** in your component's data function making it unreactive`)
@@ -61,10 +62,24 @@ export function extendVue(Vue) {
 
   Object.defineProperty(Vue.prototype, '$store', {
     get: function $store() {
-      if (!this.$root.store) {
-        throw new Error('[revue2] - No store provided to root component')
+      let store;
+      let source = this;
+
+      while (source) {
+        if (source._provided && source._provided.$$store) {
+          store = source._provided.$$store
+          break
+        }
+        source = source.$parent
       }
-      return this.$root.store
+
+      if (!store) {
+        throw new Error('[revue2] - No store provided to root component')
+      } else {
+        return store;
+      }
     }
   })
+
+   Vue.component('Provider', Provider)
 }

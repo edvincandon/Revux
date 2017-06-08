@@ -34,20 +34,41 @@ import main from './main.vue'
 
 Vue.use(Revue) // !!!
 
-
 const app = new Vue({
   el: '#app',
-  render: h => h(main),
-  data: function () {
-    return {
-      store: new Revue(store)
-    }
-  }
+  render: h => h(main)
 })
 ```
 
 **main.vue**
+Use the Provider component from Revue2 and bind your redux store. The store will be provided to all children components.
 
+```js
+<template>
+    <Provider :store="store">
+      <write></write>
+      <read></read>
+    </Provider>
+</template>
+
+<script>
+  import store from './store'
+  import connectedComponent from './connectedComponent.vue'
+
+  export default {
+    data () {
+      return {
+        store
+      }
+    },
+    components: {
+      connectedComponent
+    }
+  }
+</script>
+```
+
+**connectedComponent.vue**
 Use the `$connect` method to map state to $data and map actions to dispatch.
 Here our state looks something like `{ status: 'foobar' }`
 
