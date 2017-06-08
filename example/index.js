@@ -8,10 +8,6 @@ import App from './app.vue'
 Vue.use(Revue)
 Vue.use(VueRouter)
 
-if (__DEV__) {
-  window.Vue = Vue
-}
-
 const router = new VueRouter({
 	routes: [
 		{path: '/', component: Home}

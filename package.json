@@ -4,8 +4,8 @@
   "description": "Redux bindings for Vue.js",
   "main": "src/index.js",
   "scripts": {
-    "build": "node_modules/rollup/bin/rollup src/index.js --format umd --name 'Revue2' --output dist/revue2.js --sourcemap",
-    "build:example": "vbuild --watch",
+    "build": "node_modules/rollup/bin/rollup --globals redux:redux -c",
+    "build:example": "node_modules/vue-cli/bin/vue build example/index.js --dist dist-example/ --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/edvincandon/revue2#readme",
   "peerDependencies": {
+    "redux": "^3.6.0",
     "vue": "^2.1.6"
   },
   "devDependencies": {
@@ -32,7 +33,6 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.18.0",
-    "bili": "^0.10.0",
     "jsdom": "^7.1.0",
     "mocha": "^2.3.4",
     "redux": "^3.6.0",
@@ -40,8 +40,8 @@
     "rollup": "^0.42.0",
     "should": "^7.1.1",
     "style-loader": "^0.13.0",
-    "vbuild": "^4.3.4",
     "vue": "^2.1.6",
+    "vue-cli": "^2.8.2",
     "vue-loader": "^10.0.2",
     "vue-router": "^2.1.1",
     "vue-template-compiler": "^2.1.6"
