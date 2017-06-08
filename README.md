@@ -1,6 +1,6 @@
 
 # Revue2 (WIP)
-Based on Revue, use Redux with Vue.js seamlessly
+Inspired by Revue, use Redux with Vue.js seamlessly
 > We were not satisfied with the way the original Revue worked internally.
 
 > Basically, Revue2 works by referencing your redux store on your $root component. Revue2 provides a $connect method which is available on all Vue instances: it aims to make the use of redux with vuejs a little more like react-redux
@@ -57,7 +57,8 @@ Here our state looks something like `{ status: 'foobar' }`
 <template>{{status}}</template>
 
 <script>
-  import * as actions from './actions'
+  import { createAction } from './actions'
+  // createAction is an action creator of type () => ({type: 'ACTION_CREATED'})
 
   const mapState = state => {
     const { status } = state // deeply nested state support as well
@@ -66,10 +67,9 @@ Here our state looks something like `{ status: 'foobar' }`
     }
   })
 
-  const mapDispatch = actions // will add actions to
+  const mapDispatch = { createAction } // will be added to vm instance
 
   export default {
-    name: 'playButton',
     data () {
       return {
         status: null // define it to be reactive
@@ -77,6 +77,11 @@ Here our state looks something like `{ status: 'foobar' }`
     },
     created () {
       this.$connect(mapState, mapDispatch)
+    }
+    methods: {
+      doMagic: function () {
+        this.createAction() // thanks to $connect
+      }
     }
   }
 </script>
