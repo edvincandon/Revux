@@ -12,7 +12,9 @@ export default {
           $$store: context.props.store
         }
       },
-      template: '<div><slot></slot></div>'
+      render (h) {
+        return h('div', this.$slots.default)
+      }
     }
     return createElement(
       wrapper,
