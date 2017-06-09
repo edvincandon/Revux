@@ -7,7 +7,6 @@
     "build": "node_modules/rollup/bin/rollup --globals redux:redux -c",
     "build:example": "node_modules/vue-cli/bin/vue build example/index.js --dist dist-example/ --watch",
     "serve:example": "serve --port 4000 dist-example",
-    "dev": "npm run build:example & npm run serve:example",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
