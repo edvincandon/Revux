@@ -1,5 +1,5 @@
 {
-  "name": "revue2",
+  "name": "vuedux",
   "version": "0.0.9",
   "description": "Redux bindings for Vue.js",
   "main": "src/index.js",
@@ -12,10 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edvincandon/revue2.git"
+    "url": "git+https://github.com/edvincandon/vuedux.git"
   },
   "keywords": [
-    "revue",
+    "vuedux",
     "redux",
     "vue",
     "vuejs"
@@ -23,9 +23,9 @@
   "author": "Edvin CANDON",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/edvincandon/revue2/issues"
+    "url": "https://github.com/edvincandon/vuedux/issues"
   },
-  "homepage": "https://github.com/edvincandon/revue2#readme",
+  "homepage": "https://github.com/edvincandon/vuedux#readme",
   "peerDependencies": {
     "redux": "^3.6.0",
     "vue": "^2.1.6"

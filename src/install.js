@@ -52,7 +52,7 @@ export default function install(Vue) {
     this._unsubscribe = observeStore(__store__, getMappedState(), getMappedState, (newState, oldState) => {
       Object.keys(newState).forEach(key => {
         if (vm[key] === undefined) {
-          console.warn(`[revue2] - you forgot to declare property **${key}** in your component's data function making it unreactive`)
+          console.warn(`[vuedux] - you forgot to declare property **${key}** in your component's data function making it unreactive`)
         }
 
         vm.$set(vm, key, newState[key])
@@ -74,7 +74,7 @@ export default function install(Vue) {
       }
 
       if (!store) {
-        throw new Error('[revue2] - No store provided to root component')
+        throw new Error('[vuedux] - No store provided to root component')
       } else {
         return store
       }

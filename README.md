@@ -1,12 +1,12 @@
 
-# Revue2 (WIP)
+# Vuedux
 Inspired by Revue, use Redux with Vue.js seamlessly
 > We were not satisfied with the way the original Revue worked internally.
 
-> Basically, Revue2 works by referencing your redux store on a Provider component. Every child component of the Provider will be able to access the store via a $connect method available on all Vue instances: it aims to make the use of redux with vuejs a little more like react-redux
+> Basically, Vuedux works by referencing your redux store on a Provider component. Every child component of the Provider will be able to access the store via a $connect method available on all Vue instances: it aims to make the use of redux with vuejs a little more like react-redux
 
 # Installation
-Install via NPM: `npm i --save revue2`
+Install via NPM: `npm i --save vuedux`
 
 # Getting started
 > For **Vue-Router integration**: check out the example folder
@@ -29,10 +29,11 @@ export default store
 
 ```js
 import Vue from 'vue'
+import Vuedux from 'vuedux'
 import store from './store'
 import main from './main.vue'
 
-Vue.use(Revue) // !!!
+Vue.use(Vuedux) // !!!
 
 const app = new Vue({
   el: '#app',
@@ -42,7 +43,7 @@ const app = new Vue({
 
 **main.vue**
 
-Use the Provider component from Revue2 and bind your redux store. The store will be provided to all children components.
+Use the Provider component from Vuedux and bind your redux store. The store will be provided to all children components.
 
 ```js
 <template>

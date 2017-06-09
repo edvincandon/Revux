@@ -1,7 +1,7 @@
 export default {
   entry: 'src/index.js',
-  dest: 'dist/revue2.js',
-  moduleName: 'Revue2',
+  dest: 'dist/vuedux.js',
+  moduleName: 'Vuedux',
   format: 'umd',
   sourceMap: 'inline',
   external: [ 'redux' ]
