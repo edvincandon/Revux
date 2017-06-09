@@ -3,7 +3,7 @@
 Inspired by Revue, use Redux with Vue.js seamlessly
 > We were not satisfied with the way the original Revue worked internally.
 
-> Basically, revux works by referencing your redux store on a Provider component. Every child component of the Provider will be able to access the store via a $connect method available on all Vue instances: it aims to make the use of redux with vuejs a little more like react-redux
+> Basically, revux works by referencing your redux store on a Provider component. Every child component of the Provider will be able to access the store via a connect method: it aims to make the use of redux with vuejs a little more like react-redux
 
 # Installation
 Install via NPM: `npm i --save revux`
@@ -30,7 +30,6 @@ export default store
 ```js
 import Vue from 'vue'
 import revux from 'revux'
-import store from './store'
 import main from './main.vue'
 
 Vue.use(revux) // !!!
@@ -71,41 +70,34 @@ Use the Provider component from revux and bind your redux store. The store will 
 
 **connectedComponent.vue**
 
-Use the `$connect` method to map state to $data and map actions to dispatch.
+Use the `connect` method to map state to data and map actions to dispatch.
 Here our state looks something like `{ status: 'foobar' }`
-
-**Be sure to declare your mapped $data properties in your component's data definition for them to be reactive**
 
 ```js
 <template>{{status}}</template>
 
 <script>
+  import { connect } from 'revux' // !!!
   import { createAction } from './actions'
   // createAction is an action creator of type () => ({type: 'ACTION_CREATED'})
 
-  const mapState = state => {
-    const { status } = state // deeply nested state support as well
-    return {
-      status // must match data property
-    }
-  })
-
-  const mapDispatch = { createAction } // will be added to vm instance
-
-  export default {
-    data () {
-      return {
-        status: null // define it to be reactive
-      }
-    },
-    created () {
-      this.$connect(mapState, mapDispatch)
-    }
+  const component = {
     methods: {
       doMagic: function () {
-        this.createAction() // thanks to $connect
+        this.createAction()
       }
     }
   }
+
+  const mapState = state => {
+    const { status } = state
+    return {
+      status
+    }
+  })
+
+  const mapDispatch = { createAction }
+
+  export default connect(mapState, mapDispatch)(component)
 </script>
 ```
