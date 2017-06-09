@@ -3,7 +3,7 @@
 Inspired by Revue, use Redux with Vue.js seamlessly
 > We were not satisfied with the way the original Revue worked internally.
 
-> Basically, Revue2 works by referencing your redux store on your $root component. Revue2 provides a $connect method which is available on all Vue instances: it aims to make the use of redux with vuejs a little more like react-redux
+> Basically, Revue2 works by referencing your redux store on a Provider component. Every child component of the Provider will be able to access the store via a $connect method available on all Vue instances: it aims to make the use of redux with vuejs a little more like react-redux
 
 # Installation
 Install via NPM: `npm i --save revue2`

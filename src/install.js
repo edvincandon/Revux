@@ -17,10 +17,10 @@ export default function install(Vue) {
       }
     }
   })
-  const defaultMapState = () => ({});
+  const defaultMapState = () => ({})
   const defaultMapDispatch = dispatch => ({
     dispatch
-  });
+  })
 
   Vue.prototype.$connect = function(mapState = defaultMapState, mapDispatch = defaultMapDispatch) {
     const vm = this
@@ -62,8 +62,8 @@ export default function install(Vue) {
 
   Object.defineProperty(Vue.prototype, '$store', {
     get: function $store() {
-      let store;
-      let source = this;
+      let store
+      let source = this
 
       while (source) {
         if (source._provided && source._provided.$$store) {
@@ -76,7 +76,7 @@ export default function install(Vue) {
       if (!store) {
         throw new Error('[revue2] - No store provided to root component')
       } else {
-        return store;
+        return store
       }
     }
   })
