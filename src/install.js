@@ -20,7 +20,7 @@ export default function install(Vue) {
   const defaultMapState = () => ({})
   const defaultMapDispatch = dispatch => ({
     dispatch
-  }) 
+  })
 
   Vue.prototype.$connect = function(mapState = defaultMapState, mapDispatch = defaultMapDispatch) {
     const vm = this
