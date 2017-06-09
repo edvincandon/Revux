@@ -10,31 +10,17 @@
 </template>
 
 <script>
+  import { connect } from '../../src/index'
   import {
     addTodo as addTodoAction,
     toggleTodo as toggleTodoAction
   } from '../actions/todos'
 
-  const mapState = state => {
-    const { items, isPosting } = state.todos
-    return {
-      items,
-      isPosting
-    }
-  }
-
-  const mapDispatch = { addTodoAction, toggleTodoAction }
-
-  export default {
+  const write = {
     data () {
       return {
-        todo: '',
-        items: null,
-        isPosting: null,
+        todo: ''
       }
-    },
-    created () {
-      this.$connect(mapState, mapDispatch)
     },
     methods: {
       toggleTodo (index) {
@@ -48,4 +34,16 @@
       },
     }
   }
+
+  const mapState = state => {
+    const { items, isPosting } = state.todos
+    return {
+      items,
+      isPosting
+    }
+  }
+
+  const mapDispatch = { addTodoAction, toggleTodoAction }
+  
+  export default connect(mapState, mapDispatch)(write)
 </script>

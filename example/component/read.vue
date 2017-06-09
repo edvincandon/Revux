@@ -8,6 +8,10 @@
 </template>
 
 <script>
+  import { connect } from '../../src/index'
+
+  const read = {}
+
   const mapState = state => {
     const { todos } = state
     return {
@@ -15,14 +19,5 @@
     }
   }
 
-  export default {
-    data () {
-      return {
-        todos: null
-      }
-    },
-    created () {
-      this.$connect(mapState)
-    }
-  }
+  export default connect(mapState)(read)
 </script>
