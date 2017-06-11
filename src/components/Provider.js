@@ -1,25 +1,25 @@
 export default {
   name: 'Provider',
-  functional: true,
   props: {
-    store: Object
-  },
-  render (createElement, context) {
-    // create wrapper provider for store
-    const wrapper = {
-      provide () {
-        return {
-          $$store: context.props.store
+    store: {
+      type: Object,
+      validator: function (store) {
+        if (!store.dispatch && !store.subscribe && !store.getState) {
+          throw new Error('[revux] - store provided is not a valid redux store')
         }
-      },
-      render (h) {
-        return h('div', this.$slots.default)
+        return true
       }
     }
-    return createElement(
-      wrapper,
-      context.data,
-      context.children
-    )
+  },
+  provide () {
+    return {
+      $$store: this.store
+    }
+  },
+  render(h) {
+    if (!this.store) {
+      throw new Error('[revux] - you must provide a store to Provider')
+    }
+    return h('div', this.$slots.default)
   }
 }
