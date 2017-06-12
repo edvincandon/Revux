@@ -38,6 +38,7 @@
     "babel-preset-stage-0": "^6.16.0",
     "babel-register": "^6.18.0",
     "chai": "^4.0.2",
+    "coveralls": "^2.13.1",
     "css-loader": "^0.28.4",
     "jasmine-core": "^2.6.3",
     "karma": "^1.7.0",
