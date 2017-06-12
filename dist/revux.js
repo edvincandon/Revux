@@ -77,23 +77,25 @@ const defaultMapDispatch = dispatch => ({
 const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
   return {
     mixins: [component],
-    name: `connect-${component.name}`,
     inject: ['$$store'],
 
     data () {
+      const initData = {};
       const state = mapState(this.$$store.getState());
-      const attachedState = {};
-      Object.keys(state).forEach(key => {
-        attachedState[key] = state[key];
-      });
-
       const actions = wrapActionCreators(mapDispatch)(this.$$store.dispatch);
-      const attachedActions = {};
-      Object.keys(actions).forEach(key => {
-        attachedActions[key] = actions[key];
+
+      Object.keys(state).forEach(key => {
+        initData[key] = state[key];
       });
 
-      return Object.assign({}, attachedState, attachedActions)
+      Object.keys(actions).map(key => {
+        if (key in initData) {
+          throw new Error(`[revux] - ${key} is already defined in mapState`)
+        }
+        initData[key] = actions[key];
+      });
+
+      return initData
     },
 
     created () {
