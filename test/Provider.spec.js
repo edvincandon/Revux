@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import Vue from 'vue'
+import Vue from 'vue/dist/vue.common'
 import Provider from '../src/components/Provider'
 import store from './mocks/store'
 
@@ -7,11 +7,6 @@ const ProviderTest = Vue.extend(Provider)
 
 describe('Provider', () => {
   let vm;
-
-  it('should throw when no store provided', () => {
-    vm = new ProviderTest()
-    expect(vm.$mount).to.throw();
-  })
 
   it('should throw when store is not a valid redux store', () => {
     vm = () => new ProviderTest({

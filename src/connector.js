@@ -38,7 +38,6 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
       const getMappedState = (state = __store__.getState()) => mapState(state)
 
       const observeStore = (store, currState, select, onChange) => {
-        if (typeof onChange !== 'function') return null
         let currentState = currState || {}
 
         function handleChange() {

@@ -3,6 +3,7 @@ export default {
   props: {
     store: {
       type: Object,
+      required: true,
       validator: function (store) {
         if (!store.dispatch && !store.subscribe && !store.getState) {
           throw new Error('[revux] - store provided is not a valid redux store')
@@ -17,9 +18,6 @@ export default {
     }
   },
   render(h) {
-    if (!this.store) {
-      throw new Error('[revux] - you must provide a store to Provider')
-    }
     return h('div', this.$slots.default)
   }
 }
