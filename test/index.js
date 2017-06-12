@@ -1,2 +1,2 @@
-require('./Provider.spec');
-require('./connector.spec');
+const testsContext = require.context('.', true, /\.spec$/)
+testsContext.keys().forEach(testsContext)

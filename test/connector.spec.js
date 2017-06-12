@@ -1,38 +1,39 @@
 import { expect } from 'chai'
 import Vue from 'vue/dist/vue.common'
 import connector from '../src/connector'
+import store from './mocks/store'
 
 
 describe('Connector', () => {
   let injected
-  const injectedComp = {
-    inject: ['foo', 'bar'],
-    render () {},
-    created () {
-      console.log(this.foo, this.bar)
-      injected = [this.foo, this.bar]
-    }
-  }
 
   beforeEach(() => {
     injected = null
   })
 
-  it('should work', () => {
+  it('should inject store from parent Provider', () => {
+    const connectedComponent = connector()({
+      created () {
+        injected = this.$$store
+      },
+      render () {}
+    })
+
     new Vue({
-      template: `<child/>`,
+      template: `<connected />`,
       provide: {
-        foo: 1,
-        bar: false
+        $$store: store
       },
       components: {
-        child: {
-          template: `<injected-comp/>`,
+        connected: {
+          template: `<connected-component/>`,
           components: {
-            injectedComp
+            connectedComponent
           }
         }
       }
     }).$mount()
+
+    expect(injected).to.deep.eql(store)
   })
 })
