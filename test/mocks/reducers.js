@@ -1,22 +1,21 @@
 import { combineReducers } from 'redux'
 
 const defaultState = {
-  bar: 'foo',
-  foo: {
-    bar: 'baz',
-    baz: 'bar'
+  foo: 'foo',
+  bar: {
+    baz: 'baz',
+    foo: 'bar'
   }
 }
 
 export default combineReducers({
-  foo: function (state = defaultState, action) {
+  test: function (state = defaultState, action) {
     switch (action.type) {
-      case 'ACTION_BAR': {
-        return Object.assign({}, state, { bar: action.payload })
-      }
       case 'ACTION_FOO': {
-        const { bar, baz } = action.payload
-        return Object.assign({}, state, { bar, baz })
+        return Object.assign({}, state, { foo: action.payload })
+      }
+      case 'ACTION_BAZ': {
+        return Object.assign({}, state, { bar: Object.assign({}, state.bar, { baz: action.payload }) })
       }
       default: {
         return state

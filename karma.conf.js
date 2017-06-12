@@ -5,9 +5,19 @@ module.exports = function (config) {
     target: 'node',
     browsers: ['PhantomJS'],
     frameworks: ['jasmine'],
-    files: ['test/index.js'],
+    files: ['test/index.js', 'src/**/*.js'],
+    reporters: ['progress', 'coverage'],
     preprocessors: {
-      'test/index.js': ['webpack']
+      'test/index.js': ['webpack'],
+      'src/**/*.js': ['webpack', 'coverage']
+    },
+    coverageReporter: {
+      // specify a common output directory
+      dir: 'coverage',
+      reporters: [
+        { type: 'html', subdir: 'report-html' },
+        { type: 'lcov', subdir: 'report-lcov' }
+      ]
     },
     webpack: {
       module: {
