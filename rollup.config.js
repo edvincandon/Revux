@@ -3,6 +3,5 @@ export default {
   dest: 'dist/revux.js',
   moduleName: 'revux',
   format: 'umd',
-  sourceMap: 'inline',
   external: [ 'redux' ]
 };
