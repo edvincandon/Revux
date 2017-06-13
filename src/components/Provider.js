@@ -18,6 +18,9 @@ export default {
     }
   },
   render(h) {
-    return h('div', this.$slots.default)
+    if (this.$slots.default.length > 1) {
+      return h('div', this.$slots.default)
+    }
+    return this.$slots.default[0]
   }
 }

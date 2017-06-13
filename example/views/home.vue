@@ -1,10 +1,8 @@
 <template>
-  <div>
     <Provider :store="store">
       <write></write>
       <read></read>
     </Provider>
-  </div>
 </template>
 
 <script>

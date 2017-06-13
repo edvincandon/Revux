@@ -2,7 +2,7 @@
 # revux
 [![npm version](https://badge.fury.io/js/revux.svg)](https://badge.fury.io/js/revux)
 [![Build Status](https://travis-ci.org/edvincandon/revux.svg?branch=master)](https://travis-ci.org/edvincandon/revux)
-[![Coverage Status](https://coveralls.io/repos/github/edvincandon/revux/badge.svg)](https://coveralls.io/github/edvincandon/revux)
+[![Coverage Status](https://coveralls.io/repos/github/edvincandon/revux/badge.svg?branch=master)](https://coveralls.io/github/edvincandon/revux?branch=master)
 
 Inspired by Revue, use Redux with Vue.js seamlessly
 > We were not satisfied with the way the original Revue worked internally.
