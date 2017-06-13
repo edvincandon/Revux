@@ -1,8 +1,11 @@
-import { expect } from 'chai'
+import { expect, assert } from 'chai'
+import sinon from 'sinon'
 import Vue from 'vue/dist/vue.common'
+import revux from '../src/index'
 import Provider from '../src/components/Provider'
 import store from './mocks/store'
 
+Vue.use(revux)
 const ProviderTest = Vue.extend(Provider)
 
 describe('Provider', () => {
@@ -34,5 +37,51 @@ describe('Provider', () => {
     });
     expect(Provider.provide()).to.have.keys("$$store")
     expect(vm._provided.$$store).to.deep.eql(store)
+  })
+
+  it('should render $slots correctly if Provider has single child', () => {
+    const testCreated = sinon.stub()
+
+    new Vue({
+      template: `<Provider :store="store"><test></test></Provider>`,
+      data() {
+        return {
+          store
+        }
+      },
+      components: {
+        test: {
+          render: () => {},
+          created: testCreated
+        }
+      }
+    }).$mount()
+    assert(testCreated.called)
+  })
+
+  it('should render $slots correctly if Provider has multiple children', () => {
+    const fooCreated = sinon.stub()
+    const barCreated = sinon.stub()
+
+    new Vue({
+      template: `<Provider :store="store"><foo /><bar /></Provider>`,
+      data() {
+        return {
+          store
+        }
+      },
+      components: {
+        foo: {
+          render: () => {},
+          created: fooCreated
+        },
+        bar: {
+          render: () => {},
+          created: barCreated
+        }
+      }
+    }).$mount()
+    assert(fooCreated.called)
+    assert(barCreated.called)
   })
 })
