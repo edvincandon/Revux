@@ -1,14 +1,13 @@
 {
   "name": "revux",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Redux bindings for Vue.js",
   "main": "src/index.js",
   "scripts": {
     "build": "node_modules/rollup/bin/rollup --globals redux:redux -c",
     "build:example": "node_modules/vue-cli/bin/vue build example/index.js --dist dist-example/ --watch",
     "serve:example": "serve --port 4000 dist-example",
-    "test": "karma start karma.conf.js",
-    "coverage": "NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test"
+    "test": "karma start karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -51,6 +50,7 @@
     "karma-webpack": "^2.0.3",
     "nyc": "^11.0.2",
     "phantomjs": "^2.1.7",
+    "phantomjs-polyfill-object-assign": "0.0.2",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "rollup": "^0.42.0",

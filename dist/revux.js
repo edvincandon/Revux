@@ -4,6 +4,37 @@
 	(factory((global.revux = global.revux || {}),global.redux));
 }(this, (function (exports,redux) { 'use strict';
 
+var Provider = {
+  name: 'Provider',
+  props: {
+    store: {
+      type: Object,
+      required: true,
+      validator: function (store) {
+        if (!store.dispatch && !store.subscribe && !store.getState) {
+          throw new Error('[revux] - store provided is not a valid redux store')
+        }
+        return true
+      }
+    }
+  },
+  provide () {
+    return {
+      $$store: this.store
+    }
+  },
+  render(h) {
+    if (this.$slots.default.length > 1) {
+      return h('div', this.$slots.default)
+    }
+    return this.$slots.default[0]
+  }
+};
+
+function install(Vue) {
+   Vue.component('Provider', Provider);
+}
+
 const hasOwn = Object.prototype.hasOwnProperty;
 
 function is(x, y) {
@@ -39,40 +70,8 @@ function shallowEqual(objA, objB) {
 
 const wrapActionCreators = (actionCreators) => dispatch => redux.bindActionCreators(actionCreators, dispatch);
 
-var Provider = {
-  name: 'Provider',
-  props: {
-    store: {
-      type: Object,
-      validator: function (store) {
-        if (!store.dispatch && !store.subscribe && !store.getState) {
-          throw new Error('[revux] - store provided is not a valid redux store')
-        }
-        return true
-      }
-    }
-  },
-  provide () {
-    return {
-      $$store: this.store
-    }
-  },
-  render(h) {
-    if (!this.store) {
-      throw new Error('[revux] - you must provide a store to Provider')
-    }
-    return h('div', this.$slots.default)
-  }
-};
-
-function install(Vue) {
-   Vue.component('Provider', Provider);
-}
-
 const defaultMapState = () => ({});
-const defaultMapDispatch = dispatch => ({
-  dispatch
-});
+const defaultMapDispatch = {};
 
 const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
   return {
@@ -90,7 +89,8 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
 
       Object.keys(actions).map(key => {
         if (key in initData) {
-          throw new Error(`[revux] - ${key} is already defined in mapState`)
+          console.warn(`[revux] - ${key} already defined in mapState`);
+          return
         }
         initData[key] = actions[key];
       });
@@ -104,8 +104,7 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
       const getMappedState = (state = __store__.getState()) => mapState(state);
 
       const observeStore = (store, currState, select, onChange) => {
-        if (typeof onChange !== 'function') return null
-        let currentState = currState || {};
+        let currentState = currState;
 
         function handleChange() {
           const nextState = select(store.getState());
@@ -116,7 +115,6 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
           }
         }
 
-        onChange(currentState, null); // trigger onChange on component init
         return store.subscribe(handleChange)
       };
 
@@ -128,9 +126,7 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
     },
 
     beforeDestroy() {
-      if (this._unsubscribe) {
-        this._unsubscribe();
-      }
+      this._unsubscribe();
     }
   }
 };
@@ -142,10 +138,6 @@ const revux = {
 };
 
 const connect = connector;
-
-if (typeof window !== 'undefined' && window.Vue) {
-  window.Vue.use(revux);
-}
 
 exports['default'] = revux;
 exports.connect = connect;

@@ -8,8 +8,4 @@ const store = createStore(reducers, composeEnhancers(
    applyMiddleware(thunk)
 ));
 
-if (typeof __DEV__ !== 'undefined' && __DEV__) {
-	window.store = store
-}
-
 export default store
