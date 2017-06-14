@@ -4,9 +4,7 @@ import {
 } from './utils/index'
 
 const defaultMapState = () => ({})
-const defaultMapDispatch = dispatch => ({
-  dispatch
-})
+const defaultMapDispatch = {}
 
 const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
   return {
@@ -24,7 +22,8 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
 
       Object.keys(actions).map(key => {
         if (key in initData) {
-          throw new Error(`[revux] - ${key} is already defined in mapState`)
+          console.warn(`[revux] - ${key} already defined in mapState`)
+          return
         }
         initData[key] = actions[key]
       })
@@ -38,7 +37,7 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
       const getMappedState = (state = __store__.getState()) => mapState(state)
 
       const observeStore = (store, currState, select, onChange) => {
-        let currentState = currState || {}
+        let currentState = currState
 
         function handleChange() {
           const nextState = select(store.getState())
@@ -49,7 +48,6 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
           }
         }
 
-        onChange(currentState, null) // trigger onChange on component init
         return store.subscribe(handleChange)
       }
 
@@ -61,9 +59,7 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
     },
 
     beforeDestroy() {
-      if (this._unsubscribe) {
-        this._unsubscribe()
-      }
+      this._unsubscribe()
     }
   }
 }

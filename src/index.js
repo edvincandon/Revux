@@ -11,7 +11,3 @@ const revux = {
 
 export default revux
 export const connect = connector
-
-if (typeof window !== 'undefined' && window.Vue) {
-  window.Vue.use(revux)
-}
