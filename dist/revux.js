@@ -86,7 +86,7 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
         initData[key] = state[key];
       });
 
-      Object.keys(actions).map(key => {
+      Object.keys(actions).forEach(key => {
         if (key in initData) {
           console.warn(`[revux] - ${key} already defined in mapState`);
           return
@@ -99,8 +99,7 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
 
     created () {
       const vm = this;
-      const __store__ = this.$$store;
-      const getMappedState = (state = __store__.getState()) => mapState(state);
+      const getMappedState = (state = this.$$store.getState()) => mapState(state);
 
       const observeStore = (store, currState, select, onChange) => {
         let currentState = currState;
@@ -117,7 +116,7 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
         return store.subscribe(handleChange)
       };
 
-      this._unsubscribe = observeStore(__store__, getMappedState(), getMappedState, (newState, oldState) => {
+      this._unsubscribe = observeStore(this.$$store, getMappedState(), getMappedState, (newState, oldState) => {
         Object.keys(newState).forEach(key => {
           vm.$set(this, key, newState[key]);
         });
