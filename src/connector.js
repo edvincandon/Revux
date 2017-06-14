@@ -20,7 +20,7 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
         initData[key] = state[key]
       })
 
-      Object.keys(actions).map(key => {
+      Object.keys(actions).forEach(key => {
         if (key in initData) {
           console.warn(`[revux] - ${key} already defined in mapState`)
           return
