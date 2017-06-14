@@ -44,6 +44,6 @@
   }
 
   const mapDispatch = { addTodoAction, toggleTodoAction }
-  
+
   export default connect(mapState, mapDispatch)(write)
 </script>
