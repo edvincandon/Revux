@@ -46,12 +46,13 @@ const app = new Vue({
 
 **main.vue**
 
-Use the Provider component from revux and bind your redux store. The store will be provided to all children components.
+Use the Provider component from revux and bind your redux store. The store will be provided to all children components via vue's inject/provide mechanism.
 
 ```js
 <template>
     <Provider :store="store">
-      <connectedComponent></connectedComponent>
+      <connectedComponent>
+      </connectedComponent>
     </Provider>
 </template>
 
@@ -74,7 +75,7 @@ Use the Provider component from revux and bind your redux store. The store will 
 
 **connectedComponent.vue**
 
-Use the `connect` method to map state to data and map actions to dispatch.
+Import the `connect` method from `revux` to map state and actions to your instance's data.
 Here our state looks something like `{ status: 'foobar' }`
 
 ```js
