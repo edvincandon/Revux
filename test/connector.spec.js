@@ -1,4 +1,5 @@
-import { expect } from 'chai'
+import { expect, assert } from 'chai'
+import sinon from 'sinon'
 import Vue from 'vue/dist/vue.common'
 import connector from '../src/connector'
 import store from './mocks/store'
@@ -30,6 +31,36 @@ describe('Connector', () => {
     }).$mount()
 
     expect(injected).to.deep.eql(store)
+  })
+
+  it('should provide redux dispatch method on connected instance if no mapDispatch param to connector', () => {
+    let vm, injected
+
+    const connectedComponent = connector()({
+      created () {
+        vm = this
+        injected = this.$$store
+      },
+      render () {}
+    })
+
+    new Vue({
+      template: `<connected />`,
+      provide: {
+        $$store: store
+      },
+      components: {
+        connected: {
+          template: `<connected-component/>`,
+          components: {
+            connectedComponent
+          }
+        }
+      }
+    }).$mount()
+
+    expect(injected).to.deep.eql(store)
+    //expect(vm.dispatch()).t
   })
 
   it('should map state to data on connected component', () => {
@@ -105,5 +136,109 @@ describe('Connector', () => {
     expect(actions).to.have.keys('doThis')
     expect(vm.doThis()).to.deep.eql({type: 'DO_THIS'})
 
+  })
+
+  it('should use mapState key value if action key passed to mapDispatch is already defined in mapState keys', () => {
+    let vm
+    const baseComponent = {
+      created () {
+        vm = this
+      },
+      render () {}
+    }
+
+    const mapState = state => {
+      const { foo } = state.test
+      return {
+        foo
+      }
+    }
+
+    const mapActions = {
+      foo: () => {}
+    }
+
+    new Vue({
+      template: `<connected />`,
+      provide: {
+        $$store: store
+      },
+      components: {
+        connected: {
+          template: `<connected-component/>`,
+          components: {
+            connectedComponent: connector(mapState, mapActions)(baseComponent)
+          }
+        }
+      }
+    }).$mount()
+
+    const currentState = store.getState()
+    expect(vm.foo).to.eql(currentState.test.foo)
+  })
+
+  it('should update connected component data on store change', () => {
+    let vm
+    const baseComponent = {
+      created () {
+        vm = this
+      },
+      render () {}
+    }
+
+    const mapState = state => {
+      const { foo } = state.test
+      return {
+        foo
+      }
+    }
+
+    new Vue({
+      template: `<connected />`,
+      provide: {
+        $$store: store
+      },
+      components: {
+        connected: {
+          template: `<connected-component/>`,
+          components: {
+            connectedComponent: connector(mapState)(baseComponent)
+          }
+        }
+      }
+    }).$mount()
+
+    const expected = 'bar'
+    store.dispatch({ type: 'ACTION_FOO', payload: expected })
+    expect(vm.foo).to.eql(expected)
+  })
+
+  it('should unsubscribe on component destroy', () => {
+    let vm
+    const baseComponent = {
+      created () {
+        vm = this
+      },
+      render () {}
+    }
+
+    new Vue({
+      template: `<connected />`,
+      provide: {
+        $$store: store
+      },
+      components: {
+        connected: {
+          template: `<connected-component/>`,
+          components: {
+            connectedComponent: connector()(baseComponent)
+          }
+        }
+      }
+    }).$mount()
+
+    vm._unsubscribe = sinon.spy()
+    vm.$destroy()
+    assert(vm._unsubscribe.called)
   })
 })

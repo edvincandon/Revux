@@ -6,7 +6,10 @@ module.exports = function (config) {
     target: 'node',
     browsers: ['PhantomJS'],
     frameworks: ['jasmine'],
-    files: ['test/index.js'],
+    files: [
+      'test/index.js',
+      './node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js'
+    ],
     reporters: ['progress', 'coverage-istanbul'],
     preprocessors: {
       'test/index.js': ['webpack', 'sourcemap'],
