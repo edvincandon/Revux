@@ -52,7 +52,8 @@ module.exports = function (config) {
                 "transform-es2015-sticky-regex",
                 "transform-es2015-template-literals",
                 "transform-es2015-unicode-regex",
-                "transform-regenerator"
+                "transform-regenerator",
+                "transform-object-rest-spread"
               ]
             }
           },

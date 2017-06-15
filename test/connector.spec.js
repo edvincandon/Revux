@@ -138,7 +138,7 @@ describe('Connector', () => {
 
   })
 
-  it('should use mapState key value if action key passed to mapDispatch is already defined in mapState keys', () => {
+  it('should override and use mapDispatch value if the same key is defined both in mapState and mapDispatch', () => {
     let vm
     const baseComponent = {
       created () {
@@ -155,7 +155,7 @@ describe('Connector', () => {
     }
 
     const mapActions = {
-      foo: () => {}
+      foo: () => ({ type: 'DO_MAGIC' })
     }
 
     new Vue({
@@ -173,8 +173,7 @@ describe('Connector', () => {
       }
     }).$mount()
 
-    const currentState = store.getState()
-    expect(vm.foo).to.eql(currentState.test.foo)
+    expect(vm.foo()).to.deep.eql({ type: 'DO_MAGIC' })
   })
 
   it('should update connected component data on store change', () => {
