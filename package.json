@@ -1,6 +1,6 @@
 {
   "name": "revux",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Redux bindings for Vue.js",
   "main": "dist/revux.js",
   "scripts": {
