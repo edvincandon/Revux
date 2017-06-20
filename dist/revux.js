@@ -140,9 +140,11 @@ var revux = {
 };
 
 var connect = connector;
+var provider = Provider;
 
 exports['default'] = revux;
 exports.connect = connect;
+exports.provider = provider;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
