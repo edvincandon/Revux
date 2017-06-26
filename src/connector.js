@@ -8,6 +8,7 @@ const defaultMapDispatch = {}
 
 const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
   return {
+    name: `connect-${component.name}`,
     mixins: [component],
     inject: ['$$store'],
 

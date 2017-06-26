@@ -240,4 +240,18 @@ describe('Connector', () => {
     vm.$destroy()
     assert(vm._unsubscribe.called)
   })
+
+  it('should create new name for connected component', () => {
+      let vm
+      const baseComponent = {
+        name: 'test',
+        created () {
+          vm = this
+        },
+        render () {}
+      }
+
+      vm = connector()(baseComponent);
+      expect(vm.name).to.eql('connect-test');
+  });
 })
