@@ -83,6 +83,7 @@ var connector = function connector() {
   var mapDispatch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultMapDispatch;
   return function (component) {
     return {
+      name: 'connect-' + component.name,
       mixins: [component],
       inject: ['$$store'],
 
