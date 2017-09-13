@@ -107,7 +107,8 @@ Here our state looks something like `{ status: 'foobar' }`
 </script>
 ```
 
-**NB**
+**NB:**
+
 You can also pass an object to mapState.
 Top-level object properties should be functions that get passed the state.
 
