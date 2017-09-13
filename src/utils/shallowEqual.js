@@ -1,3 +1,6 @@
+// Credit to React-Redux for this util function
+// https://github.com/reactjs/react-redux/blob/573db0bfc8d1d50fdb6e2a98bd8a7d4675fecf11/src/utils/shallowEqual.js
+
 const hasOwn = Object.prototype.hasOwnProperty
 
 function is(x, y) {
