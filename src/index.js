@@ -1,3 +1,8 @@
+/**
+* Revux
+* Edvin CANDON <edvincandon@gmail.com>
+*/
+
 import install from './install'
 import connector from './connector'
 
