@@ -19,5 +19,11 @@
     }
   }
 
+  // or you can write:
+  //
+  // const mapState = ({
+  //   todos: state => state.todos
+  // })
+
   export default connect(mapState)(read)
 </script>
