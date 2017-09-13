@@ -106,3 +106,13 @@ Here our state looks something like `{ status: 'foobar' }`
   export default connect(mapState, mapDispatch)(component)
 </script>
 ```
+
+**NB**
+You can also pass an object to mapState.
+Top-level object properties should be functions that get passed the state.
+
+```js
+  const mapState = {
+    status: state => state.status
+  }
+```
