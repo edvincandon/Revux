@@ -6,7 +6,26 @@ import {
 const defaultMapState = () => ({})
 const defaultMapDispatch = {}
 
-const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
+const normalizeMapState = mapState => {
+  if (typeof mapState === 'function') {
+    return mapState
+  } else if (mapState === Object(mapState)) {
+    return state => {
+      const mapped = {}
+      Object.keys(mapState)
+        .filter(key => typeof mapState[key] === 'function')
+        .forEach(key => {
+          mapped[key] = mapState[key](state)
+        })
+      return mapped
+    }
+  } else {
+    throw new Error('[revux] - mapState provided to connect is invalid')
+  }
+}
+
+const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
+  const mapState = normalizeMapState(_mapState);
   return {
     name: `connect-${component.name}`,
     mixins: [component],
@@ -14,7 +33,6 @@ const connector = (mapState = defaultMapState, mapDispatch = defaultMapDispatch)
 
     data () {
       const initData = {}
-
       const mapData = {
         ...mapState(this.$$store.getState()),
         ...wrapActionCreators(mapDispatch)(this.$$store.dispatch)

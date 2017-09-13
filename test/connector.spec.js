@@ -62,45 +62,88 @@ describe('Connector', () => {
     expect(injected).to.deep.eql(store)
     //expect(vm.dispatch()).t
   })
+  describe('mapState', () => {
+    it('should map state to data if mapState is a function', () => {
+      let data
+      const currentState = store.getState()
 
-  it('should map state to data on connected component', () => {
-    let data
-    const currentState = store.getState()
-
-    const baseComponent = {
-      created () {
-        data = this.$data
-      },
-      render () {}
-    }
-
-    const mapState = state => {
-      const { foo, bar } = state.test
-      return {
-        foo,
-        bar
+      const baseComponent = {
+        created () {
+          data = this.$data
+        },
+        render () {}
       }
-    }
 
-    new Vue({
-      template: `<connected />`,
-      provide: {
-        $$store: store
-      },
-      components: {
-        connected: {
-          template: `<connected-component/>`,
-          components: {
-            connectedComponent: connector(mapState)(baseComponent)
-          }
+      const mapState = state => {
+        const { foo, bar } = state.test
+        return {
+          foo,
+          bar
         }
       }
-    }).$mount()
 
-    expect(data).to.have.keys('foo', 'bar')
-    expect(data.foo).to.eql(currentState.test.foo)
-    expect(data.bar).to.deep.eql(currentState.test.bar)
+      new Vue({
+        template: `<connected />`,
+        provide: {
+          $$store: store
+        },
+        components: {
+          connected: {
+            template: `<connected-component/>`,
+            components: {
+              connectedComponent: connector(mapState)(baseComponent)
+            }
+          }
+        }
+      }).$mount()
 
+      expect(data).to.have.keys('foo', 'bar')
+      expect(data.foo).to.eql(currentState.test.foo)
+      expect(data.bar).to.deep.eql(currentState.test.bar)
+
+    })
+    it('should map state to data if mapState is an object', () => {
+      let data
+      const currentState = store.getState()
+
+      const baseComponent = {
+        created () {
+          data = this.$data
+        },
+        render () {}
+      }
+
+      const mapState = {
+          foo: state => state.test.foo,
+          bar: state => state.test.bar
+      }
+
+      new Vue({
+        template: `<connected />`,
+        provide: {
+          $$store: store
+        },
+        components: {
+          connected: {
+            template: `<connected-component/>`,
+            components: {
+              connectedComponent: connector(mapState)(baseComponent)
+            }
+          }
+        }
+      }).$mount()
+
+      expect(data).to.have.keys('foo', 'bar')
+      expect(data.foo).to.eql(currentState.test.foo)
+      expect(data.bar).to.deep.eql(currentState.test.bar)
+
+    })
+
+    it('should throw if mapState is neither object or function', () => {
+      const baseComponent = {}
+      const mapState = 'MAKE_IT_CRASH'
+      expect(() => connector(mapState)(baseComponent)).to.throw()
+    })
   })
 
   it('should map actions to data on connected component', () => {
@@ -251,7 +294,7 @@ describe('Connector', () => {
         render () {}
       }
 
-      vm = connector()(baseComponent);
-      expect(vm.name).to.eql('connect-test');
-  });
+      vm = connector()(baseComponent)
+      expect(vm.name).to.eql('connect-test')
+  })
 })
