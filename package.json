@@ -5,7 +5,7 @@
   "main": "dist/revux.js",
   "scripts": {
     "build": "BABEL_ENV=build node_modules/rollup/bin/rollup --globals redux:redux -c",
-    "build:example": "node_modules/vue-cli/bin/vue build example/index.js --dist dist-example/ --watch",
+    "build:example": "BABEL_ENV=build node_modules/vue-cli/bin/vue build example/index.js --dist dist-example/ --watch",
     "serve:example": "serve --port 4000 dist-example",
     "test": "karma start karma.conf.js"
   },
