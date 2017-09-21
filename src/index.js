@@ -5,6 +5,7 @@
 
 import install from './install'
 import connector from './connector'
+import Provider from './components/Provider'
 
 const revux = {
   install(_vue) {
@@ -14,3 +15,4 @@ const revux = {
 
 export default revux
 export const connect = connector
+export const provider = Provider
