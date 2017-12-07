@@ -1,7 +1,8 @@
+import { bindActionCreators } from 'redux'
+
 import {
   shallowEqual,
-  wrapActionCreators
-} from './utils/index'
+} from './utils'
 
 const defaultMapState = () => ({})
 const defaultMapDispatch = {}
@@ -35,7 +36,7 @@ const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch
       const initData = {}
       const mapData = {
         ...mapState(this.$$store.getState()),
-        ...wrapActionCreators(mapDispatch)(this.$$store.dispatch)
+        ...bindActionCreators(mapDispatch, this.$$store.dispatch)
       }
 
       Object.keys(mapData).forEach(key => {
