@@ -181,6 +181,55 @@ describe('Connector', () => {
 
   })
 
+  describe('events mapping', () => {
+    let dispatchStub
+    const originalDispatch = store.dispatch
+    beforeEach(() => {
+      dispatchStub = sinon.stub().returns()
+      store.dispatch = dispatchStub
+    })
+
+    afterEach(() => {
+      store.dispatch = originalDispatch
+    })
+
+    it('should map actions on events on connected component', () => {
+      let vm
+      let actionCreator = sinon.stub().returns({type: 'DO_THIS'});
+
+      const baseComponent = {
+        created () {
+          vm = this
+        },
+        render () {}
+      }
+
+      const mapEvents = {
+        eventName: actionCreator
+      }
+
+      new Vue({
+        template: `<connected />`,
+        provide: {
+          $$store: store
+        },
+        components: {
+          connected: {
+            template: `<connected-component/>`,
+            components: {
+              connectedComponent: connector(undefined, undefined, mapEvents)(baseComponent)
+            }
+          }
+        }
+      }).$mount()
+
+      vm.$emit('eventName');
+
+      expect(actionCreator.called, 'action creator was not called').to.be.true
+      expect(store.dispatch.called, 'dispatch was not called').to.be.true
+    })
+  })
+
   it('should override and use mapDispatch value if the same key is defined both in mapState and mapDispatch', () => {
     let vm
     const baseComponent = {

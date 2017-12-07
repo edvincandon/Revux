@@ -68,18 +68,19 @@ function shallowEqual(objA, objB) {
   return true;
 }
 
-var wrapActionCreators = function wrapActionCreators(actionCreators) {
-  return function (dispatch) {
-    return redux.bindActionCreators(actionCreators, dispatch);
-  };
-};
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var defaultMapState = function defaultMapState() {
   return {};
 };
 var defaultMapDispatch = {};
+var defaultEventDispatch = {};
+
+var forEach = function forEach(obj, iterator) {
+  return Object.keys(obj).forEach(function (key) {
+    return iterator(key, obj[key]);
+  });
+};
 
 var normalizeMapState = function normalizeMapState(mapState) {
   if (typeof mapState === 'function') {
@@ -103,6 +104,7 @@ var connector = function connector() {
   var _mapState = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultMapState;
 
   var mapDispatch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultMapDispatch;
+  var eventDispatch = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : defaultEventDispatch;
   return function (component) {
     var mapState = normalizeMapState(_mapState);
     return {
@@ -112,7 +114,7 @@ var connector = function connector() {
 
       data: function data() {
         var initData = {};
-        var mapData = _extends({}, mapState(this.$$store.getState()), wrapActionCreators(mapDispatch)(this.$$store.dispatch));
+        var mapData = _extends({}, mapState(this.$$store.getState()), redux.bindActionCreators(mapDispatch, this.$$store.dispatch));
 
         Object.keys(mapData).forEach(function (key) {
           initData[key] = mapData[key];
@@ -124,6 +126,11 @@ var connector = function connector() {
         var _this = this;
 
         var vm = this;
+
+        forEach(redux.bindActionCreators(eventDispatch, this.$$store.dispatch), function (eventName, dispatcher) {
+          return vm.$on(eventName, dispatcher);
+        });
+
         var getMappedState = function getMappedState(state) {
           return mapState(state);
         };
