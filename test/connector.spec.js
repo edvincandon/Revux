@@ -3,6 +3,7 @@ import sinon from 'sinon'
 import Vue from 'vue/dist/vue.common'
 import connector from '../src/connector'
 import store from './mocks/store'
+import 'babel-polyfill';
 
 describe('Connector', () => {
   it('should inject store from parent Provider', () => {
@@ -60,7 +61,6 @@ describe('Connector', () => {
     }).$mount()
 
     expect(injected).to.deep.eql(store)
-    //expect(vm.dispatch()).t
   })
   describe('mapState', () => {
     it('should map state to data if mapState is a function', () => {
@@ -251,7 +251,8 @@ describe('Connector', () => {
     }).$mount()
 
     const expected = 'bar'
-    store.dispatch({ type: 'ACTION_FOO', payload: expected })
+
+    store.dispatch({ type: 'ACTION_FOO', payload: 'bar' })
     expect(vm.foo).to.eql(expected)
   })
 
