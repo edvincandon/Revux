@@ -4,7 +4,7 @@
     <h2>Writable todos</h2>
     {{ isPosting ? 'Posting...' : '' }}
     <ul class="todos" v-if="items && items.length > 0">
-      <li class="todo" :class="{del: todo.done}" v-for="(todo, index) in items" key="$index" v-text="todo.text" @click="toggleTodo(index)"></li>
+      <li class="todo" :class="{del: todo.done}" v-for="(todo, index) in items" :key="index" v-text="todo.text" @click="toggleTodo(index)"></li>
     </ul>
   </div>
 </template>
