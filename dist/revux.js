@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('redux')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'redux'], factory) :
-	(factory((global.revux = global.revux || {}),global.redux));
-}(this, (function (exports,redux) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+	typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	(factory((global.revux = global.revux || {})));
+}(this, (function (exports) { 'use strict';
 
 var Provider = {
   name: 'Provider',
@@ -68,9 +68,39 @@ function shallowEqual(objA, objB) {
   return true;
 }
 
+// Inspired By React-Redux
+// https://github.com/reactjs/redux/blob/master/src/bindActionCreators.js
+
+function bindActionCreators(actionCreators, dispatch) {
+  if (typeof actionCreators === 'function') {
+    return function () {
+      return dispatch(actionCreators.apply(undefined, arguments));
+    };
+  }
+
+  if (typeof actionCreators !== 'object' || actionCreators === null) {
+    throw new Error('[revux] - bindActionCreators expects an object or a function.');
+  }
+
+  var keys = Object.keys(actionCreators);
+  var boundActionCreators = {};
+
+  var _loop = function _loop(key) {
+    var actionCreator = actionCreators[key];
+    if (typeof actionCreator === 'function') boundActionCreators[key] = function () {
+      return dispatch(actionCreator.apply(undefined, arguments));
+    };
+  };
+
+  for (var key in actionCreators) {
+    _loop(key);
+  }
+  return boundActionCreators;
+}
+
 var wrapActionCreators = function wrapActionCreators(actionCreators) {
   return function (dispatch) {
-    return redux.bindActionCreators(actionCreators, dispatch);
+    return bindActionCreators(actionCreators, dispatch);
   };
 };
 

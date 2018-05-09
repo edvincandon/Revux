@@ -1,6 +1,4 @@
-import {
-  bindActionCreators
-} from 'redux'
+import bindActionCreators from './bindActionCreators'
 
 const wrapActionCreators = (actionCreators) => dispatch => bindActionCreators(actionCreators, dispatch)
 
