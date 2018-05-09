@@ -117,3 +117,8 @@ Top-level object properties should be functions that get passed the state.
     status: state => state.status
   }
 ```
+
+**TODO:**
+- [x] Remove redux dependency
+- [ ] Clean up dev environement (rollup, poi, karma etc..)
+
