@@ -10,9 +10,9 @@ const normalizeMapState = mapState => {
   if (typeof mapState === 'function') return mapState
 
   if (mapState === Object(mapState)) {
-    return state => Object.keys(mapState)
+    return (state, ownProps) => Object.keys(mapState)
       .filter(key => typeof mapState[key] === 'function')
-      .reduce((map, key) => ({ ...map, [key]: mapState[key](state) }), {})
+      .reduce((map, key) => ({ ...map, [key]: mapState[key](state, ownProps) }), {})
   }
 
   throw new Error('[revux] - mapState provided to connect is invalid')
@@ -28,7 +28,7 @@ const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch
 
     data () {
       const merged = {
-        ...mapState(this.$$store.getState()),
+        ...mapState(this.$$store.getState(), this.$props || {}),
         ...wrapActionCreators(mapDispatch)(this.$$store.dispatch)
       }
 
@@ -37,7 +37,7 @@ const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch
     },
 
     created () {
-      const getMappedState = state => mapState(state)
+      const getMappedState = state => mapState(state, this.$props || {})
 
       const observeStore = (store, select, onChange) => {
         let currentState = select(store.getState())
