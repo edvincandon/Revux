@@ -12,6 +12,17 @@ Inspired by Revue, use Redux with Vue.js seamlessly
 # Installation
 Install via NPM: `npm i --save revux`
 
+# API
+***connect***
+`connect([mapState], [mapDispatch])(Component)`
+
+> **mapState** function is passed the state and the connected component's own props:  `mapState(state, [ownProps])`
+> it should return a state object which will be accessible on your component's *data properties*.
+>
+> **mapDispatch** should be an object wrapping action creator functions - dispatch is bound automatically via redux's > *bindActionCreators* : `mapDispatch = { foo: () => ({type: 'ACTION_CREATED'}) }`
+
+
+
 # Getting started
 > For **Vue-Router integration**: check out the example folder
 
