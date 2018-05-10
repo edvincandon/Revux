@@ -1,7 +1,4 @@
+import { bindActionCreators } from 'redux'
 import shallowEqual from './shallowEqual'
-import wrapActionCreators from './wrapActionCreators'
 
-export {
-  shallowEqual,
-  wrapActionCreators
-}
+export { shallowEqual, bindActionCreators }

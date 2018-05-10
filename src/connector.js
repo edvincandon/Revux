@@ -1,6 +1,6 @@
 import {
   shallowEqual,
-  wrapActionCreators
+  bindActionCreators
 } from './utils/index'
 
 const defaultMapState = () => ({})
@@ -29,7 +29,7 @@ const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch
     data () {
       const merged = {
         ...mapState(this.$$store.getState(), this.$props || {}),
-        ...wrapActionCreators(mapDispatch)(this.$$store.dispatch)
+        ...bindActionCreators(mapDispatch, this.$$store.dispatch)
       }
 
       return Object.keys(merged)
