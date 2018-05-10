@@ -90,6 +90,9 @@ Here our state looks something like `{ status: 'foobar' }`
     methods: {
       doMagic: function () {
         this.createAction()
+      },
+      doMagic2: function () {
+        this.$emit('customevent')
       }
     }
   }
@@ -102,6 +105,10 @@ Here our state looks something like `{ status: 'foobar' }`
   })
 
   const mapDispatch = { createAction }
+
+  const mapEventDispatch = {
+    customevent: createAction
+  }
 
   export default connect(mapState, mapDispatch)(component)
 </script>

@@ -1,10 +1,14 @@
+import { bindActionCreators } from 'redux'
+
 import {
   shallowEqual,
-  wrapActionCreators
 } from './utils/index'
 
 const defaultMapState = () => ({})
 const defaultMapDispatch = {}
+const defaultEventDispatch = {}
+
+const forEach = (obj, iterator) => Object.keys(obj).forEach(key => iterator(key, obj[key]))
 
 const normalizeMapState = mapState => {
   if (typeof mapState === 'function') {
@@ -24,7 +28,7 @@ const normalizeMapState = mapState => {
   }
 }
 
-const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
+const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch, eventDispatch = defaultEventDispatch) => component => {
   const mapState = normalizeMapState(_mapState);
   return {
     name: `connect-${component.name}`,
@@ -35,7 +39,7 @@ const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch
       const initData = {}
       const mapData = {
         ...mapState(this.$$store.getState()),
-        ...wrapActionCreators(mapDispatch)(this.$$store.dispatch)
+        ...bindActionCreators(mapDispatch, this.$$store.dispatch)
       }
 
       Object.keys(mapData).forEach(key => {
@@ -47,6 +51,12 @@ const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch
 
     created () {
       const vm = this
+
+      forEach(
+        bindActionCreators(eventDispatch, this.$$store.dispatch),
+        (eventName, dispatcher) => vm.$on(eventName, dispatcher)
+      )
+
       const getMappedState = state => mapState(state)
 
       const observeStore = (store, select, onChange) => {
