@@ -68,13 +68,9 @@ function shallowEqual(objA, objB) {
   return true;
 }
 
-var wrapActionCreators = function wrapActionCreators(actionCreators) {
-  return function (dispatch) {
-    return redux.bindActionCreators(actionCreators, dispatch);
-  };
-};
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var defaultMapState = function defaultMapState() {
   return {};
@@ -82,21 +78,19 @@ var defaultMapState = function defaultMapState() {
 var defaultMapDispatch = {};
 
 var normalizeMapState = function normalizeMapState(mapState) {
-  if (typeof mapState === 'function') {
-    return mapState;
-  } else if (mapState === Object(mapState)) {
-    return function (state) {
-      var mapped = {};
-      Object.keys(mapState).filter(function (key) {
+  if (typeof mapState === 'function') return mapState;
+
+  if (mapState === Object(mapState)) {
+    return function (state, ownProps) {
+      return Object.keys(mapState).filter(function (key) {
         return typeof mapState[key] === 'function';
-      }).forEach(function (key) {
-        mapped[key] = mapState[key](state);
-      });
-      return mapped;
+      }).reduce(function (map, key) {
+        return _extends({}, map, _defineProperty({}, key, mapState[key](state, ownProps)));
+      }, {});
     };
-  } else {
-    throw new Error('[revux] - mapState provided to connect is invalid');
   }
+
+  throw new Error('[revux] - mapState provided to connect is invalid');
 };
 
 var connector = function connector() {
@@ -105,47 +99,42 @@ var connector = function connector() {
   var mapDispatch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultMapDispatch;
   return function (component) {
     var mapState = normalizeMapState(_mapState);
+
     return {
       name: 'connect-' + component.name,
       mixins: [component],
       inject: ['$$store'],
 
       data: function data() {
-        var initData = {};
-        var mapData = _extends({}, mapState(this.$$store.getState()), wrapActionCreators(mapDispatch)(this.$$store.dispatch));
+        var merged = _extends({}, mapState(this.$$store.getState(), this.$props || {}), redux.bindActionCreators(mapDispatch, this.$$store.dispatch));
 
-        Object.keys(mapData).forEach(function (key) {
-          initData[key] = mapData[key];
-        });
-
-        return initData;
+        return Object.keys(merged).reduce(function (data, key) {
+          return _extends({}, data, _defineProperty({}, key, merged[key]));
+        }, {});
       },
       created: function created() {
         var _this = this;
 
-        var vm = this;
         var getMappedState = function getMappedState(state) {
-          return mapState(state);
+          return mapState(state, _this.$props || {});
         };
 
         var observeStore = function observeStore(store, select, onChange) {
           var currentState = select(store.getState());
 
-          function handleChange() {
+          return store.subscribe(function () {
             var nextState = select(store.getState());
             if (!shallowEqual(currentState, nextState)) {
               var previousState = currentState;
               currentState = nextState;
               onChange(currentState, previousState);
             }
-          }
-
-          return store.subscribe(handleChange);
+          });
         };
 
         this._unsubscribe = observeStore(this.$$store, getMappedState, function (newState, oldState) {
           Object.keys(newState).forEach(function (key) {
-            vm.$set(_this, key, newState[key]);
+            _this.$set(_this, key, newState[key]);
           });
         });
       },
