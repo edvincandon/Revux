@@ -7,66 +7,54 @@ const defaultMapState = () => ({})
 const defaultMapDispatch = {}
 
 const normalizeMapState = mapState => {
-  if (typeof mapState === 'function') {
-    return mapState
-  } else if (mapState === Object(mapState)) {
-    return state => {
-      const mapped = {}
-      Object.keys(mapState)
-        .filter(key => typeof mapState[key] === 'function')
-        .forEach(key => {
-          mapped[key] = mapState[key](state)
-        })
-      return mapped
-    }
-  } else {
-    throw new Error('[revux] - mapState provided to connect is invalid')
+  if (typeof mapState === 'function') return mapState
+
+  if (mapState === Object(mapState)) {
+    return state => Object.keys(mapState)
+      .filter(key => typeof mapState[key] === 'function')
+      .reduce((map, key) => ({ ...map, [key]: mapState[key](state) }), {})
   }
+
+  throw new Error('[revux] - mapState provided to connect is invalid')
 }
 
 const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
-  const mapState = normalizeMapState(_mapState);
+  const mapState = normalizeMapState(_mapState)
+
   return {
     name: `connect-${component.name}`,
     mixins: [component],
     inject: ['$$store'],
 
     data () {
-      const initData = {}
-      const mapData = {
+      const merged = {
         ...mapState(this.$$store.getState()),
         ...wrapActionCreators(mapDispatch)(this.$$store.dispatch)
       }
 
-      Object.keys(mapData).forEach(key => {
-        initData[key] = mapData[key]
-      })
-
-      return initData
+      return Object.keys(merged)
+        .reduce((data, key) => ({ ...data, [key]: merged[key] }), {})
     },
 
     created () {
-      const vm = this
       const getMappedState = state => mapState(state)
 
       const observeStore = (store, select, onChange) => {
         let currentState = select(store.getState())
 
-        function handleChange() {
+        return store.subscribe(() => {
           const nextState = select(store.getState())
           if (!shallowEqual(currentState, nextState)) {
             const previousState = currentState
             currentState = nextState
             onChange(currentState, previousState)
           }
-        }
-
-        return store.subscribe(handleChange)
+        })
       }
 
       this._unsubscribe = observeStore(this.$$store, getMappedState, (newState, oldState) => {
         Object.keys(newState).forEach(key => {
-          vm.$set(this, key, newState[key])
+          this.$set(this, key, newState[key])
         })
       })
     },
