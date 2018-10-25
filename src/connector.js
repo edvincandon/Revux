@@ -18,18 +18,19 @@ const normalizeMapState = mapState => {
   throw new Error('[revux] - mapState provided to connect is invalid')
 }
 
-const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch) => component => {
+const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch, options = {}) => component => {
+  const storeKey = options.storeKey || '$$store'
   const mapState = normalizeMapState(_mapState)
 
   return {
     name: `connect-${component.name}`,
     mixins: [component],
-    inject: ['$$store'],
+    inject: [storeKey],
 
     data () {
       const merged = {
-        ...mapState(this.$$store.getState(), this.$props || {}),
-        ...bindActionCreators(mapDispatch, this.$$store.dispatch)
+        ...mapState(this[storeKey].getState(), this.$props || {}),
+        ...bindActionCreators(mapDispatch, this[storeKey].dispatch)
       }
 
       return Object.keys(merged)
@@ -52,7 +53,7 @@ const connector = (_mapState = defaultMapState, mapDispatch = defaultMapDispatch
         })
       }
 
-      this._unsubscribe = observeStore(this.$$store, getMappedState, (newState, oldState) => {
+      this._unsubscribe = observeStore(this[storeKey], getMappedState, (newState, oldState) => {
         Object.keys(newState).forEach(key => {
           this.$set(this, key, newState[key])
         })
