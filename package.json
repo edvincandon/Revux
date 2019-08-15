@@ -6,7 +6,7 @@
   "scripts": {
     "build": "BABEL_ENV=build node_modules/rollup/bin/rollup --globals redux:redux -c",
     "watch": "BABEL_ENV=build node_modules/rollup/bin/rollup --globals redux:redux -c -w",
-    "example": "npx poi watch ./example/index.js -d dist-example/",
+    "example": "npx poi watch ./example/index.js -d dist-example/ & serve ./dist-example",
     "test": "npx poi test --coverage"
   },
   "repository": {
