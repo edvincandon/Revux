@@ -47,7 +47,7 @@
     "karma-sourcemap-loader": "0.3.7",
     "phantomjs": "^2.1.7",
     "phantomjs-polyfill-object-assign": "0.0.2",
-    "poi": "^9.6.13",
+    "poi": "^10.2.11",
     "poi-preset-karma": "^9.2.4",
     "redux": "^3.6.0",
     "redux-thunk": "^2.3.0",
