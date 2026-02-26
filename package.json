@@ -63,5 +63,8 @@
     "vue-template-compiler": "^2.6.10",
     "webpack": "^2.6.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "overrides": {
+    "tar": ">=6.2.1"
+  }
 }
