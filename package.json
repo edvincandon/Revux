@@ -51,7 +51,7 @@
     "poi-preset-karma": "^9.2.4",
     "redux": "^3.6.0",
     "redux-thunk": "^2.3.0",
-    "rollup": "^0.42.0",
+    "rollup": "^2.80.0",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-watch": "^4.3.1",
     "serve": ">=7.1.3",
